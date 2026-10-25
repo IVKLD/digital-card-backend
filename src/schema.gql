@@ -7,105 +7,55 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-"""Work experience entry"""
 type ExperienceModel {
-  """List of key achievements"""
   achievements: [String!]!
-
-  """Company name"""
   company: String!
   createdAt: DateTime!
   id: ID!
-
-  """Employment period"""
   period: String!
-
-  """Job position"""
   position: String!
   profileId: ID!
   updatedAt: DateTime!
 }
 
-"""Specialist digital business card profile"""
 type ProfileModel {
-  """About / bio summary"""
   bio: String!
   createdAt: DateTime!
-
-  """Email address"""
   email: String!
-
-  """Career work history"""
   experience: [ExperienceModel!]!
-
-  """GitHub profile link"""
   github: String!
   id: ID!
-
-  """Full name"""
   name: String!
-
-  """Phone number"""
   phone: String!
-
-  """Portfolio projects"""
   projects: [ProjectModel!]!
-
-  """Candidate technical skills"""
   skills: [SkillModel!]!
-
-  """Telegram contact link"""
   telegram: String!
-
-  """Professional title / position"""
   title: String!
   updatedAt: DateTime!
 }
 
-"""Portfolio project showcase"""
 type ProjectModel {
   createdAt: DateTime!
-
-  """Detailed project description"""
   description: String!
   id: ID!
-
-  """Live deployment URL"""
   liveUrl: String
-
-  """Project name"""
   name: String!
   profileId: ID!
-
-  """Source code repository URL"""
   repoUrl: String
-
-  """Technologies used in the project"""
   stack: [String!]!
   updatedAt: DateTime!
 }
 
 type Query {
-  """Retrieves the primary specialist digital business card profile"""
   profile: ProfileModel!
-
-  """Retrieves a specialist profile by unique UUID"""
   profileById(id: ID!): ProfileModel
-
-  """
-  Retrieves all specialist profiles (demonstrates batch DataLoader deduplication)
-  """
   profiles: [ProfileModel!]!
 }
 
-"""Skill item representing candidate technical competency"""
 type SkillModel {
-  """Skill category (Frontend, Backend, DevOps, Tools)"""
   category: String!
   createdAt: DateTime!
   id: ID!
-
-  """Skill name or technology title"""
   name: String!
   profileId: ID!
   updatedAt: DateTime!

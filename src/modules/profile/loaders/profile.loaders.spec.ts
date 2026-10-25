@@ -6,15 +6,9 @@ describe('ProfileDataLoaders', () => {
 
   beforeEach(() => {
     mockPrisma = {
-      skill: {
-        findMany: jest.fn(),
-      } as any,
-      experience: {
-        findMany: jest.fn(),
-      } as any,
-      project: {
-        findMany: jest.fn(),
-      } as any,
+      skill: { findMany: jest.fn() } as any,
+      experience: { findMany: jest.fn() } as any,
+      project: { findMany: jest.fn() } as any,
     };
   });
 
@@ -47,10 +41,26 @@ describe('ProfileDataLoaders', () => {
 
   it('should batch load experiences for multiple profiles in a single query', async () => {
     const fakeExperiences = [
-      { id: 'e1', company: 'Company A', position: 'Dev', period: '2023', achievements: [], profileId: 'p1' },
-      { id: 'e2', company: 'Company B', position: 'Lead', period: '2024', achievements: [], profileId: 'p2' },
+      {
+        id: 'e1',
+        company: 'Company A',
+        position: 'Dev',
+        period: '2023',
+        achievements: [],
+        profileId: 'p1',
+      },
+      {
+        id: 'e2',
+        company: 'Company B',
+        position: 'Lead',
+        period: '2024',
+        achievements: [],
+        profileId: 'p2',
+      },
     ];
-    (mockPrisma.experience!.findMany as jest.Mock).mockResolvedValue(fakeExperiences);
+    (mockPrisma.experience!.findMany as jest.Mock).mockResolvedValue(
+      fakeExperiences,
+    );
 
     const loaders = createProfileDataLoaders(mockPrisma as PrismaService);
 
@@ -66,7 +76,13 @@ describe('ProfileDataLoaders', () => {
 
   it('should batch load projects for multiple profiles in a single query', async () => {
     const fakeProjects = [
-      { id: 'pr1', name: 'Project 1', description: 'Desc', stack: ['TS'], profileId: 'p1' },
+      {
+        id: 'pr1',
+        name: 'Project 1',
+        description: 'Desc',
+        stack: ['TS'],
+        profileId: 'p1',
+      },
     ];
     (mockPrisma.project!.findMany as jest.Mock).mockResolvedValue(fakeProjects);
 

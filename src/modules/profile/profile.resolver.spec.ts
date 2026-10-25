@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProfileResolver } from './profile.resolver';
 import { ProfileService } from './profile.service';
-import { GraphQLResolveInfo } from 'graphql';
 import { IGraphQLContext } from '../../common/types/graphql-context.interface';
 
 describe('ProfileResolver', () => {
@@ -29,117 +28,75 @@ describe('ProfileResolver', () => {
     expect(resolver).toBeDefined();
   });
 
-  describe('getProfile', () => {
-    it('should call profileService.getProfile with extracted relations', async () => {
+  describe('queries', () => {
+    it('getProfile should call service', async () => {
       const mockResult = { id: 'p1', name: 'Игорь Дробот' };
       mockProfileService.getProfile.mockResolvedValue(mockResult);
 
-      const fakeInfo = {
-        fieldNodes: [],
-        fragments: {},
-      } as unknown as GraphQLResolveInfo;
-
-      const result = await resolver.getProfile(fakeInfo);
+      const result = await resolver.getProfile();
       expect(result).toEqual(mockResult);
       expect(mockProfileService.getProfile).toHaveBeenCalled();
     });
+
+    it('getProfiles should call service', async () => {
+      const mockResult = [{ id: 'p1', name: 'Игорь Дробот' }];
+      mockProfileService.getAllProfiles.mockResolvedValue(mockResult);
+
+      const result = await resolver.getProfiles();
+      expect(result).toEqual(mockResult);
+      expect(mockProfileService.getAllProfiles).toHaveBeenCalled();
+    });
+
+    it('getProfileById should call service', async () => {
+      const mockResult = { id: 'p1', name: 'Игорь Дробот' };
+      mockProfileService.getProfileById.mockResolvedValue(mockResult);
+
+      const result = await resolver.getProfileById('p1');
+      expect(result).toEqual(mockResult);
+      expect(mockProfileService.getProfileById).toHaveBeenCalledWith('p1');
+    });
   });
 
-  describe('skills resolveField', () => {
-    it('should return parent skills directly if already present from AST resolution', async () => {
-      const parent = {
-        id: 'p1',
-        name: 'Игорь',
-        skills: [{ id: 's1', name: 'Angular' }],
-      } as any;
+  describe('resolveFields', () => {
+    const parent = { id: 'p1' } as any;
 
-      const mockLoader = { load: jest.fn() };
+    it('skills should load via DataLoader', async () => {
+      const skills = [{ id: 's1', name: 'Angular' }];
       const context = {
-        loaders: { skillsLoader: mockLoader },
+        loaders: {
+          skillsLoader: { load: jest.fn().mockResolvedValue(skills) },
+        },
       } as unknown as IGraphQLContext;
 
       const result = await resolver.skills(parent, context);
-      expect(result).toEqual(parent.skills);
-      expect(mockLoader.load).not.toHaveBeenCalled();
+      expect(result).toEqual(skills);
+      expect(context.loaders.skillsLoader.load).toHaveBeenCalledWith('p1');
     });
 
-    it('should use DataLoader if skills are not eager loaded on parent', async () => {
-      const parent = {
-        id: 'p1',
-        name: 'Игорь',
-      } as any;
-
-      const mockLoadedSkills = [{ id: 's1', name: 'Angular' }];
-      const mockLoader = { load: jest.fn().mockResolvedValue(mockLoadedSkills) };
+    it('experience should load via DataLoader', async () => {
+      const experience = [{ id: 'e1', company: 'Company' }];
       const context = {
-        loaders: { skillsLoader: mockLoader },
-      } as unknown as IGraphQLContext;
-
-      const result = await resolver.skills(parent, context);
-      expect(result).toEqual(mockLoadedSkills);
-      expect(mockLoader.load).toHaveBeenCalledWith('p1');
-    });
-  });
-
-  describe('experience resolveField', () => {
-    it('should return parent experience directly if present', async () => {
-      const parent = {
-        id: 'p1',
-        experience: [{ id: 'e1', company: 'Studio' }],
-      } as any;
-
-      const mockLoader = { load: jest.fn() };
-      const context = {
-        loaders: { experienceLoader: mockLoader },
+        loaders: {
+          experienceLoader: { load: jest.fn().mockResolvedValue(experience) },
+        },
       } as unknown as IGraphQLContext;
 
       const result = await resolver.experience(parent, context);
-      expect(result).toEqual(parent.experience);
-      expect(mockLoader.load).not.toHaveBeenCalled();
+      expect(result).toEqual(experience);
+      expect(context.loaders.experienceLoader.load).toHaveBeenCalledWith('p1');
     });
 
-    it('should use DataLoader if experience not eager loaded', async () => {
-      const parent = { id: 'p1' } as any;
-      const mockExp = [{ id: 'e1', company: 'Studio' }];
-      const mockLoader = { load: jest.fn().mockResolvedValue(mockExp) };
+    it('projects should load via DataLoader', async () => {
+      const projects = [{ id: 'pr1', name: 'Project' }];
       const context = {
-        loaders: { experienceLoader: mockLoader },
-      } as unknown as IGraphQLContext;
-
-      const result = await resolver.experience(parent, context);
-      expect(result).toEqual(mockExp);
-      expect(mockLoader.load).toHaveBeenCalledWith('p1');
-    });
-  });
-
-  describe('projects resolveField', () => {
-    it('should return parent projects directly if present', async () => {
-      const parent = {
-        id: 'p1',
-        projects: [{ id: 'pr1', name: 'Isotope' }],
-      } as any;
-
-      const mockLoader = { load: jest.fn() };
-      const context = {
-        loaders: { projectsLoader: mockLoader },
+        loaders: {
+          projectsLoader: { load: jest.fn().mockResolvedValue(projects) },
+        },
       } as unknown as IGraphQLContext;
 
       const result = await resolver.projects(parent, context);
-      expect(result).toEqual(parent.projects);
-      expect(mockLoader.load).not.toHaveBeenCalled();
-    });
-
-    it('should use DataLoader if projects not eager loaded', async () => {
-      const parent = { id: 'p1' } as any;
-      const mockProj = [{ id: 'pr1', name: 'Isotope' }];
-      const mockLoader = { load: jest.fn().mockResolvedValue(mockProj) };
-      const context = {
-        loaders: { projectsLoader: mockLoader },
-      } as unknown as IGraphQLContext;
-
-      const result = await resolver.projects(parent, context);
-      expect(result).toEqual(mockProj);
-      expect(mockLoader.load).toHaveBeenCalledWith('p1');
+      expect(result).toEqual(projects);
+      expect(context.loaders.projectsLoader.load).toHaveBeenCalledWith('p1');
     });
   });
 });

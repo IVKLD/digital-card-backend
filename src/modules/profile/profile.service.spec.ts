@@ -38,10 +38,9 @@ describe('ProfileService', () => {
       const mockProfile = { id: 'p1', name: 'Игорь Дробот' };
       mockPrisma.profile.findFirst.mockResolvedValue(mockProfile);
 
-      const result = await service.getProfile({ skills: true, experience: false, projects: false });
+      const result = await service.getProfile();
       expect(result).toEqual(mockProfile);
       expect(mockPrisma.profile.findFirst).toHaveBeenCalledWith({
-        include: { skills: { orderBy: { createdAt: 'asc' } } },
         orderBy: { createdAt: 'asc' },
       });
     });
@@ -75,7 +74,9 @@ describe('ProfileService', () => {
     it('should throw NotFoundException if id does not exist', async () => {
       mockPrisma.profile.findUnique.mockResolvedValue(null);
 
-      await expect(service.getProfileById('invalid-id')).rejects.toThrow(NotFoundException);
+      await expect(service.getProfileById('invalid-id')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

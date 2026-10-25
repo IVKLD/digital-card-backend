@@ -1,14 +1,14 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-@ObjectType({ description: 'Skill item representing candidate technical competency' })
+@ObjectType()
 export class SkillModel {
   @Field(() => ID)
   id!: string;
 
-  @Field(() => String, { description: 'Skill name or technology title' })
+  @Field()
   name!: string;
 
-  @Field(() => String, { description: 'Skill category (Frontend, Backend, DevOps, Tools)' })
+  @Field()
   category!: string;
 
   @Field(() => ID)

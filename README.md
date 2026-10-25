@@ -58,14 +58,10 @@ docker compose down
 
 ---
 
-## Архитектура и оптимизация запросов (N+1)
+## Оптимизация запросов (N+1)
 
-Для связанных сущностей (`skills`, `experience`, `projects`) реализовано два уровня оптимизации:
+Для связанных сущностей (`skills`, `experience`, `projects`) используются изолированные по запросу `DataLoader` (`src/modules/profile/loaders/profile.loaders.ts`). Они автоматически группируют и батчат запросы связей (`WHERE profileId IN (...)`), исключая проблему N+1 как для одиночного профиля, так и для списков.
 
-1. **AST Field Resolution (`src/common/ast/ast-resolver.util.ts`)**: при запросе `profile` резолвер парсит запрашиваемые клиентом поля (`GraphQLResolveInfo`). Если запрошены связи, они сразу добавляются в `include` Prisma-запроса и достаются одним SQL-запросом.
-2. **DataLoader (`src/modules/profile/loaders/profile.loaders.ts`)**: если обращение к связям происходит вне корневого запроса, работают per-request DataLoader'ы, которые батчат выборку (`WHERE profileId IN (...)`) в рамках тика Node.js.
-
-В dev-режиме в консоль логируются все SQL-запросы Prisma, поэтому легко проверить число обращений к базе.
 
 ---
 

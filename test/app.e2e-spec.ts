@@ -19,9 +19,9 @@ describe('Profile GraphQL API (e2e)', () => {
     await app.close();
   });
 
-  it('GetFullProfile root query returns complete candidate profile with relations', async () => {
+  it('profile query returns complete profile with relations', async () => {
     const query = `
-      query GetFullProfile {
+      query GetProfile {
         profile {
           name
           bio
@@ -56,18 +56,19 @@ describe('Profile GraphQL API (e2e)', () => {
     expect(profile.name).toBe('Игорь Дробот');
     expect(profile.bio).toContain('4.5+ годами опыта');
 
-    // Verify skills
     expect(Array.isArray(profile.skills)).toBe(true);
     expect(profile.skills.length).toBeGreaterThanOrEqual(20);
     expect(profile.skills).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ name: 'Angular (13-22)', category: 'Frontend' }),
+        expect.objectContaining({
+          name: 'Angular (13-22)',
+          category: 'Frontend',
+        }),
         expect.objectContaining({ name: 'NestJS', category: 'Backend' }),
         expect.objectContaining({ name: 'Docker', category: 'DevOps' }),
       ]),
     );
 
-    // Verify experience
     expect(Array.isArray(profile.experience)).toBe(true);
     expect(profile.experience).toHaveLength(3);
     expect(profile.experience[0]).toEqual(
@@ -78,7 +79,6 @@ describe('Profile GraphQL API (e2e)', () => {
     );
     expect(profile.experience[0].achievements.length).toBeGreaterThan(0);
 
-    // Verify projects
     expect(Array.isArray(profile.projects)).toBe(true);
     expect(profile.projects).toHaveLength(2);
     expect(profile.projects).toEqual(
@@ -118,11 +118,12 @@ describe('Profile GraphQL API (e2e)', () => {
     expect(response.body.errors).toBeUndefined();
     expect(Array.isArray(response.body.data.profiles)).toBe(true);
     expect(response.body.data.profiles.length).toBeGreaterThanOrEqual(1);
-    expect(response.body.data.profiles[0].skills.length).toBeGreaterThanOrEqual(20);
+    expect(response.body.data.profiles[0].skills.length).toBeGreaterThanOrEqual(
+      20,
+    );
   });
 
   it('profileById query retrieves profile by ID or returns error/null', async () => {
-    // 1. Get profile ID
     const getProfileQuery = `query { profile { id } }`;
     const getRes = await request(app.getHttpServer())
       .post('/graphql')
@@ -131,7 +132,6 @@ describe('Profile GraphQL API (e2e)', () => {
 
     const profileId = getRes.body.data.profile.id;
 
-    // 2. Query by ID
     const byIdQuery = `
       query GetById($id: ID!) {
         profileById(id: $id) {

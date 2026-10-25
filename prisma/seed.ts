@@ -3,15 +3,12 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding database...');
-
-  // Clean up existing data to allow clean re-runs
   await prisma.project.deleteMany();
   await prisma.experience.deleteMany();
   await prisma.skill.deleteMany();
   await prisma.profile.deleteMany();
 
-  const profile = await prisma.profile.create({
+  await prisma.profile.create({
     data: {
       name: 'Игорь Дробот',
       title: 'Middle Frontend / Full-stack Engineer',
@@ -22,7 +19,6 @@ async function main() {
       phone: '+7 (906) 474-19-23',
       skills: {
         create: [
-          // Frontend
           { name: 'Angular (13-22)', category: 'Frontend' },
           { name: 'React', category: 'Frontend' },
           { name: 'TypeScript', category: 'Frontend' },
@@ -30,7 +26,6 @@ async function main() {
           { name: 'RxJS', category: 'Frontend' },
           { name: 'SCSS', category: 'Frontend' },
           { name: 'HTML5/CSS3 (BEM)', category: 'Frontend' },
-          // Backend & AI
           { name: 'Node.js', category: 'Backend' },
           { name: 'NestJS', category: 'Backend' },
           { name: 'PostgreSQL', category: 'Backend' },
@@ -39,7 +34,6 @@ async function main() {
           { name: 'WebSocket', category: 'Backend' },
           { name: 'Stripe API', category: 'Backend' },
           { name: 'LLM Integration (OpenAI, Claude)', category: 'Backend' },
-          // DevOps
           { name: 'Docker', category: 'DevOps' },
           { name: 'Docker Compose', category: 'DevOps' },
           { name: 'CI/CD', category: 'DevOps' },
@@ -104,22 +98,12 @@ async function main() {
         ],
       },
     },
-    include: {
-      skills: true,
-      experience: true,
-      projects: true,
-    },
   });
-
-  console.log(`Seeded profile successfully: ${profile.name} (${profile.id})`);
-  console.log(`Skills count: ${profile.skills.length}`);
-  console.log(`Experience count: ${profile.experience.length}`);
-  console.log(`Projects count: ${profile.projects.length}`);
 }
 
 main()
   .catch((e) => {
-    console.error('Error during seeding:', e);
+    console.error(e);
     process.exit(1);
   })
   .finally(async () => {

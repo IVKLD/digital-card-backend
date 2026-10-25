@@ -3,39 +3,39 @@ import { SkillModel } from './skill.model';
 import { ExperienceModel } from './experience.model';
 import { ProjectModel } from './project.model';
 
-@ObjectType({ description: 'Specialist digital business card profile' })
+@ObjectType()
 export class ProfileModel {
   @Field(() => ID)
   id!: string;
 
-  @Field(() => String, { description: 'Full name' })
+  @Field()
   name!: string;
 
-  @Field(() => String, { description: 'Professional title / position' })
+  @Field()
   title!: string;
 
-  @Field(() => String, { description: 'About / bio summary' })
+  @Field()
   bio!: string;
 
-  @Field(() => String, { description: 'Email address' })
+  @Field()
   email!: string;
 
-  @Field(() => String, { description: 'Telegram contact link' })
+  @Field()
   telegram!: string;
 
-  @Field(() => String, { description: 'GitHub profile link' })
+  @Field()
   github!: string;
 
-  @Field(() => String, { description: 'Phone number' })
+  @Field()
   phone!: string;
 
-  @Field(() => [SkillModel], { description: 'Candidate technical skills' })
+  @Field(() => [SkillModel])
   skills!: SkillModel[];
 
-  @Field(() => [ExperienceModel], { description: 'Career work history' })
+  @Field(() => [ExperienceModel])
   experience!: ExperienceModel[];
 
-  @Field(() => [ProjectModel], { description: 'Portfolio projects' })
+  @Field(() => [ProjectModel])
   projects!: ProjectModel[];
 
   @Field(() => Date)

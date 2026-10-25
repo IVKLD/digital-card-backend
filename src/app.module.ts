@@ -26,9 +26,7 @@ import { createProfileDataLoaders } from './modules/profile/loaders/profile.load
         sortSchema: true,
         path: '/graphql',
         playground: false,
-        plugins: [
-          ApolloServerPluginLandingPageLocalDefault({ embed: true }),
-        ],
+        plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
         context: ({ req, res }: { req: Request; res: Response }) => ({
           req,
           res,

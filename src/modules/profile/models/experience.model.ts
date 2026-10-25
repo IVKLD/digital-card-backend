@@ -1,20 +1,20 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-@ObjectType({ description: 'Work experience entry' })
+@ObjectType()
 export class ExperienceModel {
   @Field(() => ID)
   id!: string;
 
-  @Field(() => String, { description: 'Company name' })
+  @Field()
   company!: string;
 
-  @Field(() => String, { description: 'Job position' })
+  @Field()
   position!: string;
 
-  @Field(() => String, { description: 'Employment period' })
+  @Field()
   period!: string;
 
-  @Field(() => [String], { description: 'List of key achievements' })
+  @Field(() => [String])
   achievements!: string[];
 
   @Field(() => ID)
