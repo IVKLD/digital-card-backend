@@ -14,7 +14,7 @@ RUN npm install
 
 COPY . .
 
-# Generate Prisma Client and build NestJS
+# Generate Prisma Client and build NestJS + Seed script
 RUN npx prisma generate
 RUN npm run build
 
@@ -26,13 +26,14 @@ WORKDIR /app
 RUN apk add --no-cache openssl
 
 ENV NODE_ENV=production
+ENV PATH="/app/node_modules/.bin:$PATH"
 
 COPY package*.json ./
 COPY tsconfig*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies including Prisma for migrations/seeding
-RUN npm install --omit=dev && npm install ts-node @types/node typescript && npm cache clean --force
+# Install only production dependencies
+RUN npm install --omit=dev && npm cache clean --force
 
 # Copy built artifacts from builder stage
 COPY --from=builder /app/dist ./dist

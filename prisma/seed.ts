@@ -23,7 +23,7 @@ async function main() {
       skills: {
         create: [
           // Frontend
-          { name: 'Angular (13-19)', category: 'Frontend' },
+          { name: 'Angular (13-22)', category: 'Frontend' },
           { name: 'React', category: 'Frontend' },
           { name: 'TypeScript', category: 'Frontend' },
           { name: 'Signals', category: 'Frontend' },

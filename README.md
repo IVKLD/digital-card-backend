@@ -132,7 +132,7 @@ query GetFullProfile {
       "github": "https://github.com/IVKLD",
       "phone": "+7 (906) 474-19-23",
       "skills": [
-        { "name": "Angular (13-19)", "category": "Frontend" },
+        { "name": "Angular (13-22)", "category": "Frontend" },
         { "name": "NestJS", "category": "Backend" },
         { "name": "Docker", "category": "DevOps" }
       ],

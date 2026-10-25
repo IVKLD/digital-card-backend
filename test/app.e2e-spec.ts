@@ -61,7 +61,7 @@ describe('Profile GraphQL API (e2e)', () => {
     expect(profile.skills.length).toBeGreaterThanOrEqual(20);
     expect(profile.skills).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ name: 'Angular (13-19)', category: 'Frontend' }),
+        expect.objectContaining({ name: 'Angular (13-22)', category: 'Frontend' }),
         expect.objectContaining({ name: 'NestJS', category: 'Backend' }),
         expect.objectContaining({ name: 'Docker', category: 'DevOps' }),
       ]),
