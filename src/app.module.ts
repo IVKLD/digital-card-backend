@@ -22,7 +22,10 @@ import { createProfileDataLoaders } from './modules/profile/loaders/profile.load
       imports: [PrismaModule],
       inject: [PrismaService],
       useFactory: (prisma: PrismaService) => ({
-        autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+        autoSchemaFile:
+          process.env.NODE_ENV === 'production' || process.env.VERCEL
+            ? true
+            : join(process.cwd(), 'src/schema.gql'),
         sortSchema: true,
         path: '/graphql',
         playground: false,
