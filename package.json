@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "prisma generate && nest build && tsc prisma/seed.ts --outDir dist/prisma --skipLibCheck --module commonjs --target ES2022 --moduleResolution node",
+    "vercel-build": "prisma generate && tsc prisma/seed.ts --outDir dist/prisma --skipLibCheck --module commonjs --target ES2022 --moduleResolution node && (npx prisma migrate deploy || true) && (node dist/prisma/seed.js || true) && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
